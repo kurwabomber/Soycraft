@@ -1,0 +1,7 @@
+name: Soycraft
+version: 1.0.0
+main: net.razorclan.Soycraft.Main
+description: Epic MMORPG Soy
+author: the razor clan
+website: https://github.com/kurwabomber/Soycraft
+api-version: '1.20'
