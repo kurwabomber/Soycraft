@@ -1,8 +1,12 @@
 package net.razorclan.Soycraft;
 
 import net.kyori.adventure.text.Component;
+
+import net.razorclan.Soycraft.Entity.EntityHandler.EntityHandler;
+import net.razorclan.Soycraft.Entity.EntityHandler.PlayerHandler;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.HUD.HUDTimer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +23,11 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this, this);
+
+        Bukkit.getPluginManager().registerEvents(new EntityHandler(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerHandler(), this);
         HUDTimer.run(this);
+        PlayerInfo.regen(this);
     }
 
     @EventHandler

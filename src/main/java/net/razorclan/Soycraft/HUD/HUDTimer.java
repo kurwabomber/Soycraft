@@ -16,10 +16,12 @@ public class HUDTimer {
             public void run() {
                 for (Player p : plugin.getServer().getOnlinePlayers()){
                     UUID id = p.getUniqueId();
+
                     if(!Main.playerMap.containsKey(id))
                         continue;
 
-                    p.sendActionBar(Component.text("Yeah it works. " + Main.playerMap.get(id).health + " Health."));
+                    p.sendActionBar(Component.text("Yeah it works. Health: " + Main.playerMap.get(id).health + " / " + Main.playerMap.get(id).maxHealth));
+
                 }
             }
         }.runTaskTimerAsynchronously(plugin, 20, 1);

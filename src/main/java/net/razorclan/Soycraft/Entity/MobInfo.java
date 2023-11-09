@@ -1,7 +1,15 @@
 package net.razorclan.Soycraft.Entity;
 
 public class MobInfo {
-    public double health = 100.0;
-    public double mana = 100.0;
+    public double strength;
+    public double intelligence;
+    public double agility;
+    public double dexterity;
 
+    public double maxHealth;
+    public double health;
+
+    public double mana;
+
+    public double maxMana;
 }
