@@ -21,6 +21,7 @@ public class HUDTimer {
                         continue;
 
                     p.sendActionBar(Component.text("Yeah it works. Health: " + Main.playerMap.get(id).health + " / " + Main.playerMap.get(id).maxHealth));
+
                 }
             }
         }.runTaskTimerAsynchronously(plugin, 20, 1);
