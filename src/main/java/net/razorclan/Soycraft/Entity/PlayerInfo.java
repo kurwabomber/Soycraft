@@ -1,6 +1,7 @@
 package net.razorclan.Soycraft.Entity;
 
 import net.razorclan.Soycraft.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -13,8 +14,8 @@ public class PlayerInfo extends MobInfo {
     public double mana;
     public double maxMana;
     public PlayerInfo() {
-        mana = 20;
-        maxMana = 20;
+        healthRegen = 1;
+        health = 20;
     }
 
 
@@ -29,5 +30,10 @@ public class PlayerInfo extends MobInfo {
                    }
             }
         }.runTaskTimerAsynchronously(plugin, 20, 20);
+    }
+
+    public void updatePlayerStats() {
+        maxHealth = 19 + strength;
+        maxMana = 19 + intelligence;
     }
 }
