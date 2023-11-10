@@ -10,7 +10,9 @@ import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.HUD.HUDTimer;
 import org.bukkit.World;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.UUID;
+
 
 public class Main extends JavaPlugin implements Listener {
     public static HashMap<UUID, MobInfo> entityMap = new HashMap<>();
@@ -35,32 +38,14 @@ public class Main extends JavaPlugin implements Listener {
         PlayerInfo.regen(this);
         for(World world : Bukkit.getServer().getWorlds())
             for(Entity ent : world.getEntities()) {
+                if(ent instanceof ArmorStand) continue;
                 entityMap.put(ent.getUniqueId(), new MobInfo());
+                EntityHandler.addHealthHologram(ent);
             }
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player p = event.getPlayer();
-        p.sendMessage(Component.text("Hello, " + event.getPlayer().getName() + "!"));
 
-        PlayerInfo info = new PlayerInfo();
-        entityMap.put(p.getUniqueId(), info);
-    }
-    @EventHandler
-    public void onHungerChange(FoodLevelChangeEvent event){
-        event.setCancelled(false);
-    }
 
-    @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent e) {
-        if(!entityMap.containsKey(e.getEntity().getUniqueId()))
-            entityMap.put(e.getEntity().getUniqueId(), new MobInfo());
-    }
 
-    @EventHandler
-    public void onEntityRemove(EntityRemoveFromWorldEvent e) {
-        if(e.getEntity() instanceof Player) return;
-        entityMap.remove(e.getEntity().getUniqueId());
-    }
+
 }

@@ -1,5 +1,8 @@
 package net.razorclan.Soycraft.Entity.EntityHandler;
 
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
+import net.kyori.adventure.text.Component;
+import net.razorclan.Soycraft.Entity.MobInfo;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,17 +15,16 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.util.EulerAngle;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class EntityHandler implements Listener {
-    // TO-DO: Find stupid undeprecated method that replaces 'setCustomName()'
     public static void dealDamage(UUID uuid, double damage) {
         if(Main.entityMap.get(uuid) == null) return;
         double health = Main.entityMap.get(uuid).health;
         health -= damage;
         if(health <= 0 && Bukkit.getEntity(uuid) instanceof Damageable)
-            ((Damageable) Bukkit.getEntity(uuid)).setHealth(0);
+            ((Damageable) Objects.requireNonNull(Bukkit.getEntity(uuid))).setHealth(0);
         else
             Main.entityMap.get(uuid).health = health;
     }
@@ -39,23 +41,26 @@ public class EntityHandler implements Listener {
     }
 
     @EventHandler
+    public void onEntityDeath(EntityDeathEvent e) {
+        if(!(e.getEntity() instanceof Player))
+            for(Entity ent : e.getEntity().getPassengers())
+                if(ent instanceof ArmorStand)
+                    ent.remove();
+    }
+    @EventHandler
     public void onEntitySpawn(EntitySpawnEvent e) {
-        if(!(e.getEntity() instanceof Player || e.getEntity() instanceof ArmorStand)) // currently every entity not one of these. lol.
-            addHealthHologram(e.getEntity());
+        if(!Main.entityMap.containsKey(e.getEntity().getUniqueId()))
+            Main.entityMap.put(e.getEntity().getUniqueId(), new MobInfo());
+        addHealthHologram(e.getEntity());
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent e ) {
-        if(!(e.getEntity() instanceof Player)) {
-            List<Entity> passengers = e.getEntity().getPassengers();
-            if(!passengers.isEmpty()) //remove health hologram
-                for(Entity ent : passengers)
-                    if(ent instanceof ArmorStand)
-                        ent.remove();
-        }
-
+    public void onEntityRemove(EntityRemoveFromWorldEvent e) {
+        if(e.getEntity() instanceof Player) return;
+        Main.entityMap.remove(e.getEntity().getUniqueId());
     }
-    private void addHealthHologram(Entity e) {
+    public static void addHealthHologram(Entity e) {
+        if(!(e instanceof LivingEntity) || e instanceof Player || e instanceof ArmorStand) return;
         ArmorStand hologram = (ArmorStand) (e.getWorld().spawnEntity(e.getLocation(), EntityType.ARMOR_STAND));
         hologram.setVisible(false);
         hologram.setBasePlate(false);
@@ -74,12 +79,10 @@ public class EntityHandler implements Listener {
         updateHealthHologram(e);
     }
 
-    private void updateHealthHologram(Entity e) {
-        List<Entity> passengers = e.getPassengers();
-        if(!passengers.isEmpty())
-            for(Entity ent : passengers)
-                if(ent instanceof ArmorStand)
-                    ent.setCustomName("Health: " + Math.round(Main.entityMap.get(e.getUniqueId()).health) + " / " + Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth));
-
+    private static void updateHealthHologram(Entity e) {
+        if(e == null) return;
+        for(Entity ent : e.getPassengers())
+            if(ent instanceof ArmorStand)
+                ent.customName(Component.text("Health: " + Math.round(Main.entityMap.get(e.getUniqueId()).health) + " / " + Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth)));
     }
 }
