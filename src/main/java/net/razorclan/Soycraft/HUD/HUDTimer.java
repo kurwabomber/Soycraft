@@ -1,7 +1,6 @@
 package net.razorclan.Soycraft.HUD;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.entity.Player;
@@ -22,7 +21,6 @@ public class HUDTimer {
                         continue;
 
                     p.sendActionBar(Component.text( "Health: " + Main.entityMap.get(id).health + "/" + Main.entityMap.get(id).maxHealth  + " | Mana: " + ((PlayerInfo)Main.entityMap.get(id)).mana + "/" + ((PlayerInfo)Main.entityMap.get(id)).maxMana));
-
                 }
             }
         }.runTaskTimerAsynchronously(plugin, 20, 1);

@@ -2,6 +2,7 @@ plugins {
     id("java")
 }
 
+
 group = "net.razorclan"
 version = "1.0-INDEV"
 

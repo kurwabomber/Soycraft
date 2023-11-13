@@ -9,10 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.util.EulerAngle;
 
 import java.util.Objects;
@@ -41,27 +40,30 @@ public class EntityHandler implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent e) {
-        if(!(e.getEntity() instanceof Player))
-            for(Entity ent : e.getEntity().getPassengers())
-                if(ent instanceof ArmorStand)
-                    ent.remove();
-    }
-    @EventHandler
-    public void onEntitySpawn(EntitySpawnEvent e) {
-        if(!Main.entityMap.containsKey(e.getEntity().getUniqueId()))
-            Main.entityMap.put(e.getEntity().getUniqueId(), new MobInfo());
-        addHealthHologram(e.getEntity());
+    public void onEntitySpawn(CreatureSpawnEvent e) {
+        if(e.getEntityType() != EntityType.ARMOR_STAND) {
+            if (!Main.entityMap.containsKey(e.getEntity().getUniqueId()))
+                Main.entityMap.put(e.getEntity().getUniqueId(), new MobInfo());
+            addHealthHologram(e.getEntity());
+        }
     }
 
     @EventHandler
     public void onEntityRemove(EntityRemoveFromWorldEvent e) {
-        if(e.getEntity() instanceof Player) return;
-        Main.entityMap.remove(e.getEntity().getUniqueId());
+        Entity ent = e.getEntity();
+        if(ent instanceof Player) return;
+
+        UUID uuid = ent.getUniqueId();
+
+        if(Main.entityMap.containsKey(ent.getUniqueId())) {
+            if(Main.entityMap.get(uuid).hologram != null)
+                Main.entityMap.get(uuid).hologram.remove();
+            Main.entityMap.remove(uuid);
+        }
     }
     public static void addHealthHologram(Entity e) {
-        if(!(e instanceof LivingEntity) || e instanceof Player || e instanceof ArmorStand) return;
-        ArmorStand hologram = (ArmorStand) (e.getWorld().spawnEntity(e.getLocation(), EntityType.ARMOR_STAND));
+        if(!(e instanceof LivingEntity) || e instanceof Player) return;
+        ArmorStand hologram = (ArmorStand) (e.getWorld().spawnEntity(new Location(e.getWorld(), 0, 0, 0), EntityType.ARMOR_STAND));
         hologram.setVisible(false);
         hologram.setBasePlate(false);
         hologram.setCollidable(false);
@@ -75,14 +77,20 @@ public class EntityHandler implements Listener {
         hologram.setInvulnerable(true);
         hologram.setCustomNameVisible(true);
         hologram.setGravity(false);
+        hologram.setMarker(true);
         e.addPassenger(hologram);
+        if(Main.entityMap.containsKey(e.getUniqueId())) {
+            MobInfo tmp = Main.entityMap.get(e.getUniqueId());
+            tmp.hologram = hologram;
+            Main.entityMap.replace(e.getUniqueId(), tmp);
+        }
         updateHealthHologram(e);
     }
 
     private static void updateHealthHologram(Entity e) {
         if(e == null) return;
-        for(Entity ent : e.getPassengers())
-            if(ent instanceof ArmorStand)
-                ent.customName(Component.text("Health: " + Math.round(Main.entityMap.get(e.getUniqueId()).health) + " / " + Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth)));
+        MobInfo tmpInfo = Main.entityMap.get(e.getUniqueId());
+        if(tmpInfo == null || tmpInfo.hologram == null ) return;
+        tmpInfo.hologram.customName(Component.text("Health: " + Math.round(Main.entityMap.get(e.getUniqueId()).health) + " / " + Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth)));
     }
 }

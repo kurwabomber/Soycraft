@@ -3,16 +3,14 @@ package net.razorclan.Soycraft.Entity.EntityHandler;
 import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.player.*;
 
-public class PlayerHandler extends EntityHandler implements Listener  {
+public class PlayerHandler implements Listener  {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
