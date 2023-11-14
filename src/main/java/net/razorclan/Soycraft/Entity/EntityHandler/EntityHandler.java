@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.MobInfo;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -13,24 +14,32 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.RayTraceResult;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class EntityHandler implements Listener {
-    public static void dealDamage(UUID uuid, double damage) {
-        if(Main.entityMap.get(uuid) == null) return;
+    public static void dealDamage(Entity damagee, Entity damager, double damage) {
+        UUID uuid = damagee.getUniqueId();
+        if(Main.entityMap.get(uuid) == null) { return; }
         double health = Main.entityMap.get(uuid).health;
         health -= damage;
+        Bukkit.getLogger().info("Hit entity for: " + damage);
         if(health <= 0 && Bukkit.getEntity(uuid) instanceof Damageable)
-            ((Damageable) Objects.requireNonNull(Bukkit.getEntity(uuid))).setHealth(0);
+            ((Damageable)(Objects.requireNonNull(Bukkit.getEntity(uuid)))).setHealth(0);
         else
             Main.entityMap.get(uuid).health = health;
+        updateHealthHologram(damagee);
     }
     @EventHandler
     public void entityHitEvent(EntityDamageByEntityEvent e) {
-        dealDamage(e.getEntity().getUniqueId(), e.getDamage());
-        updateHealthHologram(e.getEntity());
+        if(e.getDamager() instanceof Player) {
+            e.setDamage(0);
+            return;
+        }
+        dealDamage(e.getEntity(), e.getDamager(), e.getDamage());
         e.setDamage(0);
     }
 
@@ -93,4 +102,6 @@ public class EntityHandler implements Listener {
         if(tmpInfo == null || tmpInfo.hologram == null ) return;
         tmpInfo.hologram.customName(Component.text("Health: " + Math.round(Main.entityMap.get(e.getUniqueId()).health) + " / " + Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth)));
     }
+
+
 }

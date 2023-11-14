@@ -1,14 +1,20 @@
 package net.razorclan.Soycraft.Entity.EntityHandler;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.Main;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+import org.bukkit.FluidCollisionMode;
+import org.bukkit.Location;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.util.RayTraceResult;
 
 public class PlayerHandler implements Listener  {
 
@@ -41,13 +47,23 @@ public class PlayerHandler implements Listener  {
     }
 
     @EventHandler
-    public void onAnimationEvent(PlayerAnimationEvent e) {
+    public void onAnimation(PlayerAnimationEvent e) {
         if(e.getAnimationType() == PlayerAnimationType.ARM_SWING)
-            leftClick(e.getPlayer());
+            leftClickAttack(e.getPlayer());
     }
 
-    public void leftClick(Player p) {
-        p.sendMessage("NOOOOBBB");
+    public static void leftClickAttack(Player p) {
+        UUID id = p.getUniqueId();
+        RayTraceResult trace = hitRayTrace(p);
+        if(trace != null && trace.getHitEntity() != null) {
+            Bukkit.getLogger().info("Hit entity");
+            EntityHandler.dealDamage(trace.getHitEntity(), p, 2);
+        }
     }
 
+    public static RayTraceResult hitRayTrace(LivingEntity ent) {
+        Location loc = ent.getEyeLocation();
+        Predicate<Entity> filter = e -> (!(e instanceof Player) && e instanceof LivingEntity && !e.isDead() && !(e instanceof ArmorStand));
+        return ent.getWorld().rayTrace(loc, loc.getDirection(), 3.0, FluidCollisionMode.NEVER, true, 0.5, filter);
+    }
 }
