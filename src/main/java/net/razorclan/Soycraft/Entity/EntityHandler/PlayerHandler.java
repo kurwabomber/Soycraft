@@ -11,6 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
@@ -56,14 +58,13 @@ public class PlayerHandler implements Listener  {
         UUID id = p.getUniqueId();
         RayTraceResult trace = hitRayTrace(p);
         if(trace != null && trace.getHitEntity() != null) {
-            Bukkit.getLogger().info("Hit entity");
-            EntityHandler.dealDamage(trace.getHitEntity(), p, 2);
+            Bukkit.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p, trace.getHitEntity(), EntityDamageEvent.DamageCause.CUSTOM, 2));
         }
     }
 
     public static RayTraceResult hitRayTrace(LivingEntity ent) {
         Location loc = ent.getEyeLocation();
         Predicate<Entity> filter = e -> (!(e instanceof Player) && e instanceof LivingEntity && !e.isDead() && !(e instanceof ArmorStand));
-        return ent.getWorld().rayTrace(loc, loc.getDirection(), 3.0, FluidCollisionMode.NEVER, true, 0.5, filter);
+        return ent.getWorld().rayTrace(loc, loc.getDirection(), 15.0, FluidCollisionMode.NEVER, true, 0.5, filter);
     }
 }

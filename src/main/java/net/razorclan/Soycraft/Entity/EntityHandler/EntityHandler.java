@@ -7,6 +7,7 @@ import net.razorclan.Soycraft.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,26 +27,27 @@ public class EntityHandler implements Listener {
         if(Main.entityMap.get(uuid) == null) { return; }
         double health = Main.entityMap.get(uuid).health;
         health -= damage;
-        Bukkit.getLogger().info("Hit entity for: " + damage);
         if(health <= 0 && Bukkit.getEntity(uuid) instanceof Damageable)
             ((Damageable)(Objects.requireNonNull(Bukkit.getEntity(uuid)))).setHealth(0);
         else
             Main.entityMap.get(uuid).health = health;
         updateHealthHologram(damagee);
-    }
-    @EventHandler
-    public void entityHitEvent(EntityDamageByEntityEvent e) {
-        if(e.getDamager() instanceof Player) {
-            e.setDamage(0);
-            return;
-        }
-        dealDamage(e.getEntity(), e.getDamager(), e.getDamage());
-        e.setDamage(0);
+
     }
 
     @EventHandler
     public void entityDamagedEvent(EntityDamageEvent e) {
         if(e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) e.setCancelled(true); //cancel fall damage
+        if(e instanceof EntityDamageByEntityEvent) {
+            Entity damager = ((EntityDamageByEntityEvent) e).getDamager();
+            if(damager instanceof Player && e.getCause() != EntityDamageEvent.DamageCause.CUSTOM) {
+                e.setCancelled(true);
+                return;
+            }
+            dealDamage(e.getEntity(), damager, e.getDamage());
+            e.getEntity().getWorld().spawnParticle(Particle.CRIT, e.getEntity().getLocation(), 15);
+            e.setDamage(0);
+        }
     }
 
     @EventHandler
