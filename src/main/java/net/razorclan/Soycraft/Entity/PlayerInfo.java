@@ -12,6 +12,7 @@ public class PlayerInfo extends MobInfo {
     public double healthRegen;
     public double mana;
     public double maxMana;
+    public boolean isSwitchingItem;
     public PlayerInfo() {
         healthRegen = 1;
         health = 20;

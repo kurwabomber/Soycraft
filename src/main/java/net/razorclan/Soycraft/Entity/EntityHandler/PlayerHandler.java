@@ -1,14 +1,16 @@
 package net.razorclan.Soycraft.Entity.EntityHandler;
-import java.util.UUID;
-import java.util.function.Predicate;
 
+import com.destroystokyo.paper.event.player.PlayerAttackEntityCooldownResetEvent;
 import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -17,6 +19,9 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.util.RayTraceResult;
+
+import java.util.UUID;
+import java.util.function.Predicate;
 
 public class PlayerHandler implements Listener  {
 
@@ -49,8 +54,12 @@ public class PlayerHandler implements Listener  {
     }
 
     @EventHandler
-    public void onAnimation(PlayerAnimationEvent e) {
-        if(e.getAnimationType() == PlayerAnimationType.ARM_SWING)
+    public void onPlayerAttack(PlayerAttackEntityCooldownResetEvent e) {
+        leftClickAttack(e.getPlayer());
+    }
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        if(e.getAction().isLeftClick())
             leftClickAttack(e.getPlayer());
     }
 
