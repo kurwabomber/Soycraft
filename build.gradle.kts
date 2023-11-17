@@ -18,3 +18,8 @@ dependencies {
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
+task<Copy>("moveToOutput") {
+    mustRunAfter("jar")
+    from("build/libs/Soycraft-1.0-INDEV.jar")
+    into(File("/home/davidn/Documents/Servers/SoyblockTestServer/plugins").absolutePath)
+}

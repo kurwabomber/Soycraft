@@ -3,8 +3,8 @@ package net.razorclan.Soycraft.Entity.EntityHandler;
 import com.destroystokyo.paper.event.player.PlayerAttackEntityCooldownResetEvent;
 import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
+import net.razorclan.Soycraft.Item.WeaponCombos.BaseSwordCombo;
 import net.razorclan.Soycraft.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -13,11 +13,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.UUID;
@@ -64,16 +66,31 @@ public class PlayerHandler implements Listener  {
     }
 
     public static void leftClickAttack(Player p) {
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if(p.hasCooldown(item.getType()))
+            return;
+
         UUID id = p.getUniqueId();
         RayTraceResult trace = hitRayTrace(p);
+        double damageDealt = 2 * 1+(Math.sqrt(Main.entityMap.get(id).strength + Main.entityMap.get(id).dexterity)/10.0);
+
         if(trace != null && trace.getHitEntity() != null) {
-            Bukkit.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p, trace.getHitEntity(), EntityDamageEvent.DamageCause.CUSTOM, 2));
+            EntityHandler.dealDamage(trace.getHitEntity(), p, damageDealt);
         }
+
+        switch(item.getType()){
+            case STONE_SWORD -> {
+                BaseSwordCombo.onUse(p);
+            }
+        }
+        //set after attributes are made
+        p.setCooldown(p.getInventory().getItemInMainHand().getType(), 5);
+        ((PlayerInfo)Main.entityMap.get(id)).currentCombo++;
     }
 
     public static RayTraceResult hitRayTrace(LivingEntity ent) {
         Location loc = ent.getEyeLocation();
         Predicate<Entity> filter = e -> (!(e instanceof Player) && e instanceof LivingEntity && !e.isDead() && !(e instanceof ArmorStand));
-        return ent.getWorld().rayTrace(loc, loc.getDirection(), 15.0, FluidCollisionMode.NEVER, true, 0.5, filter);
+        return ent.getWorld().rayTrace(loc, loc.getDirection(), 4.0, FluidCollisionMode.NEVER, true, 0.5, filter);
     }
 }

@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.MobInfo;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.*;
@@ -15,28 +14,35 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.EulerAngle;
-import org.bukkit.util.RayTraceResult;
 
-import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Predicate;
+
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.TextColor.color;
 
 public class EntityHandler implements Listener {
-    public static void dealDamage(Entity damagee, Entity damager, double damage) {
-        UUID uuid = damagee.getUniqueId();
-        if(Main.entityMap.get(uuid) == null) { return; }
+    public static void dealDamage(Entity victim, Entity attacker, double damage) {
+        if(!(victim instanceof LivingEntity) )
+            return;
+
+        UUID uuid = victim.getUniqueId();
+        if(Main.entityMap.get(uuid) == null)
+            return;
+
         double health = Main.entityMap.get(uuid).health;
         health -= damage;
-        if(health <= 0 && Bukkit.getEntity(uuid) instanceof Damageable)
-            ((Damageable)(Objects.requireNonNull(Bukkit.getEntity(uuid)))).setHealth(0);
-        else
-            Main.entityMap.get(uuid).health = health;
-        updateHealthHologram(damagee);
+        Main.entityMap.get(uuid).health = health;
 
+        ((LivingEntity)victim).damage(0);
+        if(health <= 0 && Bukkit.getEntity(uuid) instanceof Damageable)
+            ((LivingEntity)victim).setHealth(0);
+
+        updateHealthHologram(victim);
     }
 
     @EventHandler
     public void entityDamagedEvent(EntityDamageEvent e) {
+        if(e.getDamage() <= 0.1) return;
         if(e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) e.setCancelled(true); //cancel fall damage
         if(e instanceof EntityDamageByEntityEvent) {
             Entity damager = ((EntityDamageByEntityEvent) e).getDamager();
@@ -90,11 +96,8 @@ public class EntityHandler implements Listener {
         hologram.setGravity(false);
         hologram.setMarker(true);
         e.addPassenger(hologram);
-        if(Main.entityMap.containsKey(e.getUniqueId())) {
-            MobInfo tmp = Main.entityMap.get(e.getUniqueId());
-            tmp.hologram = hologram;
-            Main.entityMap.replace(e.getUniqueId(), tmp);
-        }
+        if(Main.entityMap.containsKey(e.getUniqueId()))
+            Main.entityMap.get(e.getUniqueId()).hologram = hologram;
         updateHealthHologram(e);
     }
 
@@ -102,8 +105,11 @@ public class EntityHandler implements Listener {
         if(e == null) return;
         MobInfo tmpInfo = Main.entityMap.get(e.getUniqueId());
         if(tmpInfo == null || tmpInfo.hologram == null ) return;
-        tmpInfo.hologram.customName(Component.text("Health: " + Math.round(Main.entityMap.get(e.getUniqueId()).health) + " / " + Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth)));
+        final Component text = text()
+                .append(e.name().color(color(247, 140, 0)))
+                .append(text(" | "))
+                .append(text(Math.round(Main.entityMap.get(e.getUniqueId()).health) +"/"+ Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth)).color(color(156, 58, 47) ) )
+                .build();
+        tmpInfo.hologram.customName(text);
     }
-
-
 }

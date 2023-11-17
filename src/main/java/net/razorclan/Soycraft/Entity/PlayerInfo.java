@@ -12,10 +12,11 @@ public class PlayerInfo extends MobInfo {
     public double healthRegen;
     public double mana;
     public double maxMana;
-    public boolean isSwitchingItem;
+    public int currentCombo;
     public PlayerInfo() {
         healthRegen = 1;
         health = 20;
+        currentCombo = 0;
     }
 
 
@@ -33,7 +34,7 @@ public class PlayerInfo extends MobInfo {
     }
 
     public void updatePlayerStats() {
-        maxHealth = 19 + strength;
-        maxMana = 19 + intelligence;
+        maxHealth = 20 + Math.sqrt(vitality)*8.0;
+        maxMana = 20 + Math.sqrt(wisdom)*8.0;
     }
 }
