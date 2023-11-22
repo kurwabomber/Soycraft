@@ -16,8 +16,8 @@ public class MobInfo {
 
 
     public MobInfo() {
-        health = 10;
-        maxHealth = 10;
+        health = 20;
+        maxHealth = 20;
         strength = 0;
         dexterity = 0;
         vitality = 0;

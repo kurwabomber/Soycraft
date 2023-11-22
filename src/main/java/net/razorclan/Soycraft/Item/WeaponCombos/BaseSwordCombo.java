@@ -21,16 +21,18 @@ public class BaseSwordCombo {
         if( ( ((PlayerInfo)Main.entityMap.get(p.getUniqueId())).currentCombo & 1 ) == 0 )
             right.multiply(-1);
 
+        up.multiply( (Math.random()*2.0)-1.0 );
+
         for (int i = -19; i < 19; i++) {
             final int finalI = i;
             new BukkitRunnable(){
                 public void run(){
                     double fwdFactor = Math.pow(Math.abs(finalI * 0.1), 2.1);
-                    for(int i = 0; i < 15;i++) {
-                        Vector tmpForward = forward.clone().multiply(4.0 - fwdFactor - i*0.12);
+                    for(int j = 0; j < 15;j++) {
+                        Vector tmpForward = forward.clone().multiply(4.0 - fwdFactor - j*0.12);
                         Vector tmpRight = right.clone().multiply(finalI * 0.15);
                         Vector tmpUp = up.clone().multiply(finalI * 0.07);
-                        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(255 - i*15, Math.max(70 + finalI*3 - i*10,0), 0), 1F);
+                        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(255 - j*15, Math.max(70 + finalI*3 - j*10,0), 0), 1F);
                         Vector finalVec = new Vector();
                         finalVec.add(loc.clone().toVector());
                         finalVec.add(tmpForward);

@@ -5,3 +5,12 @@ description: Epic MMORPG Soy
 author: the razor clan
 website: https://github.com/kurwabomber/Soycraft
 api-version: '1.20'
+commands:
+  sbgive:
+    description: Gives an item from the arraylist of item IDs.
+    usage: /<command> <player> <itemID> <stack size>
+    permission: soycraft.giveitems
+    permission-message: You do not have access to this command.
+permissions:
+  soycraft.giveitems:
+    default: op
