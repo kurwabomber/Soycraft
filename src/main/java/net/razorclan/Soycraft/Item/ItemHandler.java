@@ -21,6 +21,7 @@ public class ItemHandler {
 
         BaseItem data = Main.configItemMap.get(itemID);
         meta.setDisplayName(IridiumColorAPI.process(data.displayName));
+        meta.setLore(data.getItemDescription());
 
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -28,5 +29,22 @@ public class ItemHandler {
         meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         meta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
         item.setItemMeta(meta);
+    }
+    public static Object getAttribute(ItemStack item, String attribute, Object defaultValue){
+        if(item == null)
+            return defaultValue;
+
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null)
+            return defaultValue;
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if(container == null || !container.has(Main.itemIDKey))
+            return defaultValue;
+
+        String itemID = container.get(Main.itemIDKey, PersistentDataType.STRING);
+        BaseItem itemInfo = Main.configItemMap.get(itemID);
+
+        return itemInfo.attributes.getOrDefault(attribute, defaultValue);
     }
 }

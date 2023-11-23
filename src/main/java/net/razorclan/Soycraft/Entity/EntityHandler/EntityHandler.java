@@ -53,6 +53,7 @@ public class EntityHandler implements Listener {
             dealDamage(e.getEntity(), damager, e.getDamage());
             e.getEntity().getWorld().spawnParticle(Particle.CRIT, e.getEntity().getLocation(), 15);
             e.setDamage(0);
+            ((LivingEntity)e.getEntity()).setNoDamageTicks(0);
         }
     }
 
@@ -108,7 +109,7 @@ public class EntityHandler implements Listener {
         final Component text = text()
                 .append(e.name().color(color(247, 140, 0)))
                 .append(text(" | "))
-                .append(text(Math.round(Main.entityMap.get(e.getUniqueId()).health) +"/"+ Math.round(Main.entityMap.get(e.getUniqueId()).maxHealth)).color(color(156, 58, 47) ) )
+                .append(text(String.format(" %.0f/%.0f",Main.entityMap.get(e.getUniqueId()).health,Main.entityMap.get(e.getUniqueId()).maxHealth)).color(color(255, 58, 47) ) )
                 .build();
         tmpInfo.hologram.customName(text);
     }

@@ -21,8 +21,6 @@ public class BaseSwordCombo {
         if( ( ((PlayerInfo)Main.entityMap.get(p.getUniqueId())).currentCombo & 1 ) == 0 )
             right.multiply(-1);
 
-        up.multiply( (Math.random()*2.0)-1.0 );
-
         for (int i = -19; i < 19; i++) {
             final int finalI = i;
             new BukkitRunnable(){

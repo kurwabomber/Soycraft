@@ -1,7 +1,9 @@
 package net.razorclan.Soycraft.Entity;
 
+import net.razorclan.Soycraft.Item.ItemHandler;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -19,7 +21,6 @@ public class PlayerInfo extends MobInfo {
         currentCombo = 0;
     }
 
-
     public static void regen(final Plugin plugin){
         new BukkitRunnable(){
             @Override
@@ -33,7 +34,20 @@ public class PlayerInfo extends MobInfo {
         }.runTaskTimerAsynchronously(plugin, 20, 20);
     }
 
-    public void updatePlayerStats() {
+    public void updatePlayerStats(Player p) {
+        strength = 0;
+        dexterity = 0;
+        vitality = 0;
+        endurance = 0;
+        intelligence = 0;
+        wisdom = 0;
+
+        for(ItemStack armor : p.getInventory().getArmorContents()){
+            if(armor == null) continue;
+
+            vitality += ((Number)ItemHandler.getAttribute(armor, "vitalityBonus", 0)).doubleValue();
+        }
+
         maxHealth = 20 + Math.sqrt(vitality)*8.0;
         maxMana = 20 + Math.sqrt(wisdom)*8.0;
     }

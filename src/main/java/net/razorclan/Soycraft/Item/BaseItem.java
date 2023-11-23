@@ -1,5 +1,6 @@
 package net.razorclan.Soycraft.Item;
 
+import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,11 +10,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BaseItem {
     public String id;
     public String displayName;
+    public String itemLore;
     public String itemBase;
     public HashMap<String, Object> attributes;
 
@@ -31,5 +35,22 @@ public class BaseItem {
 
         Bukkit.getLogger().info("Display Name: " + displayName + " | Item Base: " + itemBase);
         return newItem;
+    }
+    public List<String> getItemDescription(){
+        List<String> description = new ArrayList<String>();
+
+        addLoreItem("physicalDamage", "<SOLID:3366cc>⚔ Physical Damage: §6%.0f", description);
+        addLoreItem("implosionDamage", "<SOLID:3366cc>⚠ Implosion Damage: §6%.0f", description);
+        addLoreItem("attackSpeed", "<SOLID:3366cc>⚔ Attack Speed: §6%.1f attacks/s", description);
+        addLoreItem("attackRange", "<SOLID:3366cc>⚔ Attack Range: §6%.1f blocks", description);
+        addLoreItem("strengthBonus", "<SOLID:3366cc>\uD83D\uDCAA Strength: §6%.0f", description);
+        addLoreItem("vitalityBonus", "<SOLID:3366cc>❤ Vitality: §6%.0f", description);
+
+        description.add(IridiumColorAPI.process(itemLore));
+        return description;
+    }
+    private void addLoreItem(String key, String format, List<String> description){
+        if(attributes.containsKey(key))
+            description.add(IridiumColorAPI.process(String.format(format, attributes.get(key))));
     }
 }

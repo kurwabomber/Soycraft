@@ -91,7 +91,7 @@ public class Main extends JavaPlugin implements Listener {
         p.setHealth(p.getMaxHealth());
 
         for(ItemStack item : p.getInventory()){
-            if(item == null) return;
+            if(item == null) continue;
 
             ItemHandler.validateItem(item);
         }

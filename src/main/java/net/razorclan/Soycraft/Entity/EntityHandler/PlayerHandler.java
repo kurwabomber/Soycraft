@@ -1,8 +1,10 @@
 package net.razorclan.Soycraft.Entity.EntityHandler;
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerAttackEntityCooldownResetEvent;
 import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
+import net.razorclan.Soycraft.Item.ItemHandler;
 import net.razorclan.Soycraft.Item.WeaponCombos.BaseSwordCombo;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.FluidCollisionMode;
@@ -34,7 +36,7 @@ public class PlayerHandler implements Listener  {
 
         PlayerInfo info = new PlayerInfo();
         Main.entityMap.put(p.getUniqueId(), info);
-        ((PlayerInfo)Main.entityMap.get(p.getUniqueId())).updatePlayerStats();
+        ((PlayerInfo)Main.entityMap.get(p.getUniqueId())).updatePlayerStats(p);
     }
     @EventHandler
     public void onplayerRespawn(PlayerRespawnEvent e) {
@@ -44,11 +46,15 @@ public class PlayerHandler implements Listener  {
 
     @EventHandler
     public void onInventoryChange(InventoryClickEvent e) {
-        ((PlayerInfo)Main.entityMap.get(e.getWhoClicked().getUniqueId())).updatePlayerStats();
+        ((PlayerInfo)Main.entityMap.get(e.getWhoClicked().getUniqueId())).updatePlayerStats((Player) e.getWhoClicked());
+    }
+    @EventHandler
+    public void onArmorEquip(PlayerArmorChangeEvent e) {
+        ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats(e.getPlayer());
     }
     @EventHandler
     public void onPlayerSwapItem(PlayerSwapHandItemsEvent e) {
-        ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats();
+        ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats(e.getPlayer());
     }
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event){
@@ -78,8 +84,8 @@ public class PlayerHandler implements Listener  {
             EntityHandler.dealDamage(trace.getHitEntity(), p, damageDealt);
         }
 
-        switch(item.getType()){
-            case STONE_SWORD -> {
+        switch(ItemHandler.getAttribute(item, "moveset", "").toString()){
+            case "basicSword" -> {
                 BaseSwordCombo.onUse(p);
             }
         }
