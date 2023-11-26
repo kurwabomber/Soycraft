@@ -44,11 +44,20 @@ public class PlayerInfo extends MobInfo {
 
         for(ItemStack armor : p.getInventory().getArmorContents()){
             if(armor == null) continue;
-
-            vitality += ((Number)ItemHandler.getAttribute(armor, "vitalityBonus", 0)).doubleValue();
+            addAllStatBoostsFromItem(armor);
         }
+        ItemStack itemHeld = p.getInventory().getItemInMainHand();
+        addAllStatBoostsFromItem(itemHeld);
 
         maxHealth = 20 + Math.sqrt(vitality)*8.0;
         maxMana = 20 + Math.sqrt(wisdom)*8.0;
+    }
+    private void addAllStatBoostsFromItem(ItemStack item){
+        strength += ((Number) ItemHandler.getAttribute(item, "strengthBonus", 0)).doubleValue();
+        dexterity += ((Number) ItemHandler.getAttribute(item, "dexterityBonus", 0)).doubleValue();
+        vitality += ((Number) ItemHandler.getAttribute(item, "vitalityBonus", 0)).doubleValue();
+        endurance += ((Number) ItemHandler.getAttribute(item, "enduranceBonus", 0)).doubleValue();
+        intelligence += ((Number) ItemHandler.getAttribute(item, "intelligenceBonus", 0)).doubleValue();
+        wisdom += ((Number) ItemHandler.getAttribute(item, "wisdomBonus", 0)).doubleValue();
     }
 }
