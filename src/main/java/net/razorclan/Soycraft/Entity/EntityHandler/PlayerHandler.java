@@ -17,11 +17,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.UUID;
@@ -40,21 +38,35 @@ public class PlayerHandler implements Listener  {
     }
     @EventHandler
     public void onplayerRespawn(PlayerRespawnEvent e) {
-        Main.entityMap.get(e.getPlayer().getUniqueId()).health = Main.entityMap.get(e.getPlayer().getUniqueId()).maxHealth;
-        ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).mana = 0;
+        new BukkitRunnable(){public void run() {
+            Main.entityMap.get(e.getPlayer().getUniqueId()).health = Main.entityMap.get(e.getPlayer().getUniqueId()).maxHealth;
+            ((PlayerInfo) Main.entityMap.get(e.getPlayer().getUniqueId())).mana = 0;
+        }}.runTaskLater(Main.instance, 1);
     }
 
     @EventHandler
     public void onInventoryChange(InventoryClickEvent e) {
-        ((PlayerInfo)Main.entityMap.get(e.getWhoClicked().getUniqueId())).updatePlayerStats((Player) e.getWhoClicked());
+        new BukkitRunnable(){public void run() {
+            ((PlayerInfo)Main.entityMap.get(e.getWhoClicked().getUniqueId())).updatePlayerStats((Player) e.getWhoClicked());
+        }}.runTaskLater(Main.instance, 1);
     }
     @EventHandler
     public void onArmorEquip(PlayerArmorChangeEvent e) {
-        ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats(e.getPlayer());
+        new BukkitRunnable(){public void run() {
+            ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats(e.getPlayer());
+        }}.runTaskLater(Main.instance, 1);
     }
     @EventHandler
-    public void onPlayerSwapItem(PlayerSwapHandItemsEvent e) {
-        ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats(e.getPlayer());
+    public void onPlayerSwapItem(PlayerItemHeldEvent e) {
+        new BukkitRunnable(){public void run() {
+            ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats(e.getPlayer());
+        }}.runTaskLater(Main.instance, 1);
+    }
+    @EventHandler
+    public void onPlayerSwapHand(PlayerSwapHandItemsEvent e) {
+        new BukkitRunnable(){public void run() {
+            ((PlayerInfo)Main.entityMap.get(e.getPlayer().getUniqueId())).updatePlayerStats(e.getPlayer());
+        }}.runTaskLater(Main.instance, 1);
     }
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event){
@@ -77,11 +89,10 @@ public class PlayerHandler implements Listener  {
             return;
 
         UUID id = p.getUniqueId();
-        RayTraceResult trace = hitRayTrace(p);
-        double damageDealt = 2 * 1+(Math.sqrt(Main.entityMap.get(id).strength + Main.entityMap.get(id).dexterity)/10.0);
 
+        RayTraceResult trace = hitRayTrace(p);
         if(trace != null && trace.getHitEntity() != null) {
-            EntityHandler.dealDamage(trace.getHitEntity(), p, damageDealt);
+            EntityHandler.dealDamage(trace.getHitEntity(), p, Main.entityMap.get(id).getDamageDealt());
         }
 
         switch(ItemHandler.getAttribute(item, "moveset", "").toString()){

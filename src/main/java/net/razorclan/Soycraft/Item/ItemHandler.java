@@ -39,7 +39,7 @@ public class ItemHandler {
             return defaultValue;
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if(container == null || !container.has(Main.itemIDKey))
+        if(!container.has(Main.itemIDKey))
             return defaultValue;
 
         String itemID = container.get(Main.itemIDKey, PersistentDataType.STRING);
