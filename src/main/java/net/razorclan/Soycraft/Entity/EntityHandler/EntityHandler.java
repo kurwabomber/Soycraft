@@ -37,7 +37,7 @@ public class EntityHandler implements Listener {
 
         double health = Main.entityMap.get(uuid).health;
         StringBuilder builder = new StringBuilder();
-        builder.append("-");
+        builder.append("- ");
         for(String key : damage.keySet()){
             double dmg = damage.get(key);
             if(dmg <= 0)
@@ -71,7 +71,7 @@ public class EntityHandler implements Listener {
             health -= dmg;
         }
         spawnIndicator(((LivingEntity) victim).getEyeLocation().subtract(0.0,0.5,0.0), builder.toString(), victim);
-        Main.entityMap.get(uuid).health = health;
+        Main.entityMap.get(uuid).health = Math.max(health, 0);
 
         ((LivingEntity)victim).damage(0);
         if(health <= 0 && Bukkit.getEntity(uuid) instanceof Damageable)

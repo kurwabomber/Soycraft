@@ -12,6 +12,7 @@ import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.HUD.HUDTimer;
 import net.razorclan.Soycraft.Item.BaseItem;
 import net.razorclan.Soycraft.Item.ItemHandler;
+import net.razorclan.Soycraft.Item.MenuItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -68,6 +69,7 @@ public class Main extends JavaPlugin implements Listener {
         }
         Bukkit.getPluginManager().registerEvents(this, this);
 
+        Bukkit.getPluginManager().registerEvents(new MenuItem(), this);
         Bukkit.getPluginManager().registerEvents(new EntityHandler(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerHandler(), this);
         HUDTimer.run(this);

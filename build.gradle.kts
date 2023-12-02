@@ -13,12 +13,14 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
+    maven("https://repo.xenondevs.xyz/releases")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.iridium:IridiumColorAPI:1.0.6")
+    implementation("xyz.xenondevs.invui:invui:1.23")
 }
 
 java {

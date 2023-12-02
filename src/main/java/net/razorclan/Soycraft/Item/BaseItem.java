@@ -71,7 +71,6 @@ public class BaseItem {
         addLoreItem("intelligenceBonus", "<SOLID:3366cc>✦ Intelligence: §6%.0f", description);
         addLoreItem("wisdomBonus", "<SOLID:3366cc>✦ Wisdom: §6%.0f", description);
 
-
         description.add(IridiumColorAPI.process(itemLore));
         return description;
     }

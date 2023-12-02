@@ -1,7 +1,7 @@
 package net.razorclan.Soycraft.Entity.EntityHandler;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
-import com.destroystokyo.paper.event.player.PlayerAttackEntityCooldownResetEvent;
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.Item.ItemHandler;
@@ -40,7 +40,7 @@ public class PlayerHandler implements Listener  {
     public void onplayerRespawn(PlayerRespawnEvent e) {
         new BukkitRunnable(){public void run() {
             Main.entityMap.get(e.getPlayer().getUniqueId()).health = Main.entityMap.get(e.getPlayer().getUniqueId()).maxHealth;
-            ((PlayerInfo) Main.entityMap.get(e.getPlayer().getUniqueId())).mana = 0;
+            Main.entityMap.get(e.getPlayer().getUniqueId()).mana = 0;
         }}.runTaskLater(Main.instance, 1);
     }
 
@@ -74,7 +74,7 @@ public class PlayerHandler implements Listener  {
     }
 
     @EventHandler
-    public void onPlayerAttack(PlayerAttackEntityCooldownResetEvent e) {
+    public void onPlayerAttack(PrePlayerAttackEntityEvent e) {
         leftClickAttack(e.getPlayer());
     }
     @EventHandler

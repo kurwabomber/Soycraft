@@ -2,6 +2,7 @@ package net.razorclan.Soycraft.Item;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import net.razorclan.Soycraft.Main;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,6 +25,7 @@ public class ItemHandler {
         meta.setLore(data.getItemDescription());
 
         meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
@@ -46,5 +48,18 @@ public class ItemHandler {
         BaseItem itemInfo = Main.configItemMap.get(itemID);
 
         return itemInfo.attributes.getOrDefault(attribute, defaultValue);
+    }
+
+    public static ItemStack getItemForDisplay(Material mat)
+    {
+        ItemStack item = new ItemStack(mat);
+        ItemMeta meta = item.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        meta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
+        item.setItemMeta(meta);
+        return item;
     }
 }
