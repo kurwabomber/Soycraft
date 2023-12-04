@@ -173,7 +173,7 @@ public class EntityHandler implements Listener {
         hologram.setCustomName(format);
         hologram.setGravity(false);
         new BukkitRunnable(){public void run(){
-            hologram.remove();
+            if(hologram.canTick()) hologram.remove();
         }}.runTaskLater(Main.instance, 15);
 
     }

@@ -1,4 +1,4 @@
-package net.razorclan.Soycraft.Menu.MainSubmenus.Crafting.CraftingTable;
+package net.razorclan.Soycraft.Menu.MainSubmenus.Crafting.Anvil;
 
 import net.razorclan.Soycraft.Item.ItemHandler;
 import net.razorclan.Soycraft.Main;
@@ -23,44 +23,35 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class CraftingTableMenu {
+public class AnvilMenu {
     public static void initialize(Player p){
         String[] guiSetup = {
                 "bbbbbbbbb",
-                "b123bbbbb",
-                "b456bobbb",
-                "b789bbbbb",
+                "bb1b2b3bb",
                 "bbbbbbbbb"
         };
-        VirtualInventory inv = new VirtualInventory(10);
+        VirtualInventory inv = new VirtualInventory(3);
         Gui gui = Gui.normal()
                 .setStructure(guiSetup)
                 .addIngredient('b', new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setDisplayName("")))
                 .addIngredient('1', new SlotElement.InventorySlotElement(inv, 0))
                 .addIngredient('2', new SlotElement.InventorySlotElement(inv, 1))
                 .addIngredient('3', new SlotElement.InventorySlotElement(inv, 2))
-                .addIngredient('4', new SlotElement.InventorySlotElement(inv, 3))
-                .addIngredient('5', new SlotElement.InventorySlotElement(inv, 4))
-                .addIngredient('6', new SlotElement.InventorySlotElement(inv, 5))
-                .addIngredient('7', new SlotElement.InventorySlotElement(inv, 6))
-                .addIngredient('8', new SlotElement.InventorySlotElement(inv, 7))
-                .addIngredient('9', new SlotElement.InventorySlotElement(inv, 8))
-                .addIngredient('o', new SlotElement.InventorySlotElement(inv, 9))
                 .build();
 
         Window window = Window.single()
                 .setViewer(p)
-                .setTitle("3x3 Crafting Table")
+                .setTitle("Anvil")
                 .setGui(gui)
                 .build();
 
         window.open();
 
         inv.setPreUpdateHandler(event -> {
-            if(event.getSlot() == 9){
-                ItemStack output = inv.getItem(9);
+            if(event.getSlot() == 2){
+                ItemStack output = inv.getItem(2);
                 if(output == null) return;
-                for(int i = 0; i < 9; ++i) {
+                for(int i = 0; i < 3; ++i) {
                     inv.setItem(UpdateReason.SUPPRESSED, i, null);
                 }
             }
@@ -70,7 +61,7 @@ public class CraftingTableMenu {
             OnCraftingMenuUpdate(event);
         });
         window.addCloseHandler(() -> {
-            for(int i = 0; i<9; ++i){
+            for(int i = 0; i<3; ++i){
                 ItemStack item = inv.getItem(i);
                 if(item == null) continue;
                 p.getInventory().addItem(item);
@@ -82,14 +73,10 @@ public class CraftingTableMenu {
         Inventory inv = event.getInventory();
         //Make a recipe caching system later, this is for now.
         HashMap<List<String>, String> recipesMap = new HashMap<>();
-        recipesMap.put(Arrays.asList(
-                "APPLE", "", "",
-                "", "APPLE", "",
-                "", "", "APPLE"),
-                "TESTITEM");
+        recipesMap.put(Arrays.asList("APPLE", "APPLE"), "TESTITEM");
 
-        List<String> key = Arrays.asList("", "", "", "", "", "", "", "", "");
-        for(int i = 0; i<9; ++i){
+        List<String> key = Arrays.asList("", "");
+        for(int i = 0; i<3; ++i){
             ItemStack item = inv.getItem(i);
             if(item == null)
                 continue;
@@ -105,7 +92,7 @@ public class CraftingTableMenu {
             Bukkit.getLogger().info("recipe found");
             ItemStack output = Main.itemMap.get(recipesMap.getOrDefault(key, "")).clone();
             ItemHandler.validateItem(output);
-            inv.setItem(UpdateReason.SUPPRESSED, 9, output);
+            inv.setItem(UpdateReason.SUPPRESSED, 2, output);
         }
     }
 }
