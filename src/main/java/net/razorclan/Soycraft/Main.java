@@ -84,6 +84,13 @@ public class Main extends JavaPlugin implements Listener {
                 entityMap.put(ent.getUniqueId(), new MobInfo());
                 EntityHandler.addHealthHologram(ent);
             }
+            for(Player player : world.getPlayers()){
+                for(ItemStack item : player.getInventory()){
+                    if(item == null) continue;
+                    ItemHandler.validateItem(item);
+                }
+                PlayerHandler.initializePlayer(player);
+            }
         }
     }
 
@@ -97,6 +104,7 @@ public class Main extends JavaPlugin implements Listener {
 
             ItemHandler.validateItem(item);
         }
+        PlayerHandler.initializePlayer(p);
     }
     public static Vector getRightVector(Location loc){Location temp = loc.clone();temp.setYaw(temp.getYaw()+90.0F); return temp.getDirection();}
     public static Vector getUpVector(Location loc){Location temp = loc.clone();temp.setPitch(temp.getPitch()-90.0F); return temp.getDirection();}

@@ -20,7 +20,7 @@ public class CraftingMenu {
         };
         Gui gui = Gui.normal()
                 .setStructure(guiSetup)
-                .addIngredient('b', new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)))
+                .addIngredient('b', new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setDisplayName("")))
                 .addIngredient('c', new CraftingTableItem())
                 .addIngredient('a', new AnvilMenuItem())
                 .build();

@@ -13,7 +13,7 @@ import xyz.xenondevs.invui.item.impl.AbstractItem;
 public class CraftingMenuItem extends AbstractItem {
     @Override
     public ItemProvider getItemProvider() {
-        return new ItemBuilder(Material.ENCHANTED_BOOK).setDisplayName(IridiumColorAPI.process("<SOLID:ff9933>Crafting"))
+        return new ItemBuilder(Material.CRAFTING_TABLE).setDisplayName(IridiumColorAPI.process("<SOLID:ff9933>Crafting"))
                 .addLoreLines(IridiumColorAPI.process("<SOLID:ffcc00>Craft using any unlocked station."));
     }
 

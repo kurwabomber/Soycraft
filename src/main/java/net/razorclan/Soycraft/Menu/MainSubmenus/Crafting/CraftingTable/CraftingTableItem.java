@@ -22,6 +22,6 @@ public class CraftingTableItem extends AbstractItem {
 
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
-        player.openWorkbench(null, true);
+        CraftingTableMenu.initialize(player);
     }
 }

@@ -2,7 +2,6 @@ package net.razorclan.Soycraft.Entity.EntityHandler;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
-import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.Item.ItemHandler;
 import net.razorclan.Soycraft.Item.WeaponCombos.BaseSwordCombo;
@@ -17,7 +16,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
@@ -26,16 +28,11 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 public class PlayerHandler implements Listener  {
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player p = event.getPlayer();
-        p.sendMessage(Component.text("Hello, " + event.getPlayer().getName() + "!"));
-
-        PlayerInfo info = new PlayerInfo();
-        Main.entityMap.put(p.getUniqueId(), info);
+    public static void initializePlayer(Player p){
+        Main.entityMap.put(p.getUniqueId(), new PlayerInfo());
         ((PlayerInfo)Main.entityMap.get(p.getUniqueId())).updatePlayerStats(p);
     }
+
     @EventHandler
     public void onplayerRespawn(PlayerRespawnEvent e) {
         new BukkitRunnable(){public void run() {

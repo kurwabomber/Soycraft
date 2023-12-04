@@ -23,7 +23,7 @@ public class MainMenu {
         };
         Gui gui = Gui.normal()
                 .setStructure(guiSetup)
-                .addIngredient('b', new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)))
+                .addIngredient('b', new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setDisplayName("")))
 
                 .addIngredient('s', new SimpleItem(new ItemBuilder(Material.PLAYER_HEAD).setDisplayName(IridiumColorAPI.process("<SOLID:6699ff>Soyblock Stats"))
                         .addLoreLines("placeholder") ))
