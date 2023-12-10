@@ -1,14 +1,13 @@
 package net.razorclan.Soycraft.HUD;
 
+import com.iridium.iridiumcolorapi.IridiumColorAPI;
+import net.razorclan.Soycraft.Entity.PlayerInfo;
 import net.razorclan.Soycraft.Main;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
-
-import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.format.TextColor.color;
 
 public class HUDTimer {
     public static void run(final Plugin plugin){
@@ -21,10 +20,17 @@ public class HUDTimer {
                     if(!Main.entityMap.containsKey(id))
                         continue;
 
-                    p.sendActionBar(text()
-                            .append(text(String.format("❤ %.0f/%.0f",+ Main.entityMap.get(id).health, Main.entityMap.get(id).maxHealth)).color(color(219, 0, 73)))
-                            .append(text(String.format(" ✦ %.0f/%.0f", Main.entityMap.get(id).mana,Main.entityMap.get(id).maxMana)).color(color(9, 95, 176)))
-                            .build());
+                    StringBuilder hudText = new StringBuilder();
+
+                    hudText.append(IridiumColorAPI.process(String.format("<SOLID:db0049>❤ %.0f/%.0f ", Main.entityMap.get(id).health, Main.entityMap.get(id).maxHealth)));
+                    hudText.append(IridiumColorAPI.process(String.format("<SOLID:095fb0>✦ %.0f/%.0f ", Main.entityMap.get(id).mana,Main.entityMap.get(id).maxMana)));
+                    ((PlayerInfo)Main.entityMap.get(id)).extraHudText.removeIf(i -> i.time < System.currentTimeMillis());
+
+                    for(HUDInfo info : ((PlayerInfo)Main.entityMap.get(id)).extraHudText){
+                        hudText.append(info.displayText).append(" ");
+                    }
+
+                    p.sendActionBar(String.valueOf(hudText));
                 }
             }
         }.runTaskTimerAsynchronously(plugin, 20, 1);

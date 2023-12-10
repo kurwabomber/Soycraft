@@ -13,6 +13,7 @@ import net.razorclan.Soycraft.HUD.HUDTimer;
 import net.razorclan.Soycraft.Item.BaseItem;
 import net.razorclan.Soycraft.Item.ItemHandler;
 import net.razorclan.Soycraft.Item.MenuItem;
+import net.razorclan.Soycraft.SpellSystem.SpellPlayerHooks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -68,10 +69,10 @@ public class Main extends JavaPlugin implements Listener {
             Bukkit.getLogger().info("Soyblock | Loaded in " + key);
         }
         Bukkit.getPluginManager().registerEvents(this, this);
-
         Bukkit.getPluginManager().registerEvents(new MenuItem(), this);
         Bukkit.getPluginManager().registerEvents(new EntityHandler(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerHandler(), this);
+        Bukkit.getPluginManager().registerEvents(new SpellPlayerHooks(), this);
         HUDTimer.run(this);
         PlayerInfo.regen(this);
 
@@ -93,7 +94,6 @@ public class Main extends JavaPlugin implements Listener {
             }
         }
     }
-
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) { //straight lollin'
         Player p = e.getPlayer();

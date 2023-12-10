@@ -58,10 +58,15 @@ public class CraftingTableMenu {
 
         inv.setPreUpdateHandler(event -> {
             if(event.getSlot() == 9){
-                ItemStack output = inv.getItem(9);
-                if(output == null) return;
-                for(int i = 0; i < 9; ++i) {
-                    inv.setItem(UpdateReason.SUPPRESSED, i, null);
+                if(event.isAdd()){
+                    event.setCancelled(true);
+                }
+                else {
+                    ItemStack output = inv.getItem(9);
+                    if (output == null) return;
+                    for (int i = 0; i < 9; ++i) {
+                        inv.setItem(UpdateReason.SUPPRESSED, i, null);
+                    }
                 }
             }
         });
@@ -106,6 +111,8 @@ public class CraftingTableMenu {
             ItemStack output = Main.itemMap.get(recipesMap.getOrDefault(key, "")).clone();
             ItemHandler.validateItem(output);
             inv.setItem(UpdateReason.SUPPRESSED, 9, output);
+        }else{
+            inv.setItem(UpdateReason.SUPPRESSED, 9, null);
         }
     }
 }
