@@ -33,7 +33,7 @@ public class ItemHandler {
         item.setItemMeta(meta);
     }
     public static Object getAttribute(ItemStack item, String attribute, Object defaultValue){
-        if(item == null)
+        if(item == null || item.isEmpty())
             return defaultValue;
 
         ItemMeta meta = item.getItemMeta();
@@ -48,6 +48,21 @@ public class ItemHandler {
         BaseItem itemInfo = Main.configItemMap.get(itemID);
 
         return itemInfo.attributes.getOrDefault(attribute, defaultValue);
+    }
+
+    public static boolean isValidItem(ItemStack item){
+        if(item == null || item.isEmpty())
+            return false;
+
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null)
+            return false;
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if(!container.has(Main.itemIDKey))
+            return false;
+
+        return true;
     }
 
     public static ItemStack getItemForDisplay(Material mat)

@@ -17,10 +17,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.iridium:IridiumColorAPI:1.0.6")
-    implementation("xyz.xenondevs.invui:invui:1.23")
+    implementation("xyz.xenondevs.invui:invui:1.24")
 }
 
 java {

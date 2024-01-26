@@ -36,41 +36,17 @@ public class EntityHandler implements Listener {
             return;
 
         double health = Main.entityMap.get(uuid).health;
-        StringBuilder builder = new StringBuilder();
-        builder.append("- ");
+        double damageDealt = 0;
         for(String key : damage.keySet()){
             double dmg = damage.get(key);
             if(dmg <= 0)
                 continue;
 
-            switch(key){
-                case "physicalDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:d60000>⚔ %.0f ", dmg)));
-                case "slashDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:d66b00>⑊ %.0f ", dmg)));
-                case "impalingDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:dba400>↗ %.0f ", dmg)));
-                case "crushingDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:db0050>\uD83D\uDF8B %.0f ", dmg)));
-                case "blastDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:db028f>⚠ %.0f ", dmg)));
-                case "explosiveDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:d4db02>⚠ %.0f ", dmg)));
-                case "implosionDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:d60000>⚠ %.0f ", dmg)));
-                case "magicDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:02acdb>✦ %.0f ", dmg)));
-                case "lightningDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:ede905>\uD83D\uDDF2 %.0f ", dmg)));
-                case "darknessDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:474747>☁ %.0f ", dmg)));
-                case "poisonDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:0b9401>\uD83E\uDE78 %.0f ", dmg)));
-                case "witherDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:242424>\uD83C\uDFF5 %.0f ", dmg)));
-                case "enderDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:6d00d4>\uD83E\uDFBF %.0f ", dmg)));
-                case "phasingDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:b800d4>\uD83E\uDFBF %.0f ", dmg)));
-                case "voidDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:1a1a1a>\uD83E\uDFBF %.0f ", dmg)));
-                case "fireDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:f22e02>\uD83D\uDD25 %.0f ", dmg)));
-                case "infernalDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:f27202>\uD83D\uDF02 %.0f ", dmg)));
-                case "combustionDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:f27202>\uD83E\uDDE8 %.0f ", dmg)));
-                case "waterDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:026af2>\uD83C\uDF0A %.0f ", dmg)));
-                case "drowningDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:026af2>\uD83D\uDF04 %.0f ", dmg)));
-                case "channelingDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:026af2>䷜ %.0f ", dmg)));
-                case "frostDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:5465ff>❄ %.0f ", dmg)));
-                case "erosionDamage"-> builder.append(IridiumColorAPI.process(String.format("<SOLID:5465ff>\uD83C\uDF27 %.0f ", dmg)));
-            }
             health -= dmg;
+            damageDealt += dmg;
         }
-        spawnIndicator(((LivingEntity) victim).getEyeLocation().subtract(0.0,0.5,0.0), builder.toString(), victim);
+
+        spawnIndicator(((LivingEntity) victim).getEyeLocation().subtract(0.0,0.5,0.0), IridiumColorAPI.process(String.format("<SOLID:d60000>⚔ %.0f ", damageDealt)), victim);
         Main.entityMap.get(uuid).health = Math.max(health, 0);
 
         ((LivingEntity)victim).damage(0);
@@ -112,10 +88,10 @@ public class EntityHandler implements Listener {
         if(ent instanceof Player) return;
 
         UUID uuid = ent.getUniqueId();
-
         if(Main.entityMap.containsKey(ent.getUniqueId())) {
-            if(Main.entityMap.get(uuid).hologram != null)
+            if(Main.entityMap.get(uuid).hologram != null && Main.entityMap.get(uuid).hologram.isEmpty()) {
                 Main.entityMap.get(uuid).hologram.remove();
+            }
             Main.entityMap.remove(uuid);
         }
     }
@@ -136,6 +112,7 @@ public class EntityHandler implements Listener {
         hologram.setCustomNameVisible(true);
         hologram.setGravity(false);
         hologram.setMarker(true);
+        hologram.setPersistent(true);
         e.addPassenger(hologram);
         if(Main.entityMap.containsKey(e.getUniqueId()))
             Main.entityMap.get(e.getUniqueId()).hologram = hologram;
@@ -172,6 +149,7 @@ public class EntityHandler implements Listener {
         hologram.setCustomNameVisible(true);
         hologram.setCustomName(format);
         hologram.setGravity(false);
+        hologram.setPersistent(true);
         new BukkitRunnable(){public void run(){
             if(hologram.canTick()) hologram.remove();
         }}.runTaskLater(Main.instance, 15);

@@ -106,6 +106,6 @@ public class Main extends JavaPlugin implements Listener {
         }
         PlayerHandler.initializePlayer(p);
     }
-    public static Vector getRightVector(Location loc){Location temp = loc.clone();temp.setYaw(temp.getYaw()+90.0F); return temp.getDirection();}
+    public static Vector getRightVector(Location loc){Location temp = loc.clone();temp.setPitch(0F);temp.setYaw(temp.getYaw()+90.0F); return temp.getDirection();}
     public static Vector getUpVector(Location loc){Location temp = loc.clone();temp.setPitch(temp.getPitch()-90.0F); return temp.getDirection();}
 }
