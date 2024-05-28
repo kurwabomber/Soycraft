@@ -1,6 +1,5 @@
 package net.razorclan.Soycraft.Entity.EntityHandler;
 
-import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import net.kyori.adventure.text.Component;
 import net.razorclan.Soycraft.Entity.MobInfo;
@@ -14,9 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -83,18 +84,30 @@ public class EntityHandler implements Listener {
     }
 
     @EventHandler
-    public void onEntityRemove(EntityRemoveFromWorldEvent e) {
+    public void onEntityDeath(EntityDeathEvent e) {
         Entity ent = e.getEntity();
         if(ent instanceof Player) return;
 
         UUID uuid = ent.getUniqueId();
         if(Main.entityMap.containsKey(ent.getUniqueId())) {
-            if(Main.entityMap.get(uuid).hologram != null && Main.entityMap.get(uuid).hologram.isEmpty()) {
+            if(Main.entityMap.get(uuid).hologram != null && Main.entityMap.get(uuid).hologram.isValid()) {
                 Main.entityMap.get(uuid).hologram.remove();
             }
             Main.entityMap.remove(uuid);
         }
     }
+
+    public static void entityMapGarbageCollection(){
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                ArrayList<UUID> IDList = new ArrayList<>();
+                Bukkit.getWorlds().forEach(world ->  world.getEntities().forEach(entity -> IDList.add(entity.getUniqueId()) ) );
+                Main.entityMap.entrySet().removeIf(e -> !IDList.contains(e.getKey()));
+            }
+        }.runTaskTimer(Main.instance, 20L, 20L);
+    }
+
     public static void addHealthHologram(Entity e) {
         if(!(e instanceof LivingEntity) || e instanceof Player) return;
         ArmorStand hologram = (ArmorStand) (e.getWorld().spawnEntity(new Location(e.getWorld(), 0, 0, 0), EntityType.ARMOR_STAND));

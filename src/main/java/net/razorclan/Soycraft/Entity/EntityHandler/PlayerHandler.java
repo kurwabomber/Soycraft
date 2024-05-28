@@ -7,6 +7,11 @@ import net.razorclan.Soycraft.Item.ItemHandler;
 import net.razorclan.Soycraft.Item.WeaponCombos.BaseFistCombo;
 import net.razorclan.Soycraft.Item.WeaponCombos.BaseSwordCombo;
 import net.razorclan.Soycraft.Main;
+import org.bukkit.FluidCollisionMode;
+import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,8 +20,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.RayTraceResult;
 
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class PlayerHandler implements Listener  {
     public static void initializePlayer(Player p){
@@ -101,9 +108,20 @@ public class PlayerHandler implements Listener  {
                 case "basicSword" -> {
                     BaseSwordCombo.onUse(p);
                 }
+                default -> {
+                    RayTraceResult trace = PlayerHandler.hitRayTrace(p, (double)ItemHandler.getAttribute(item, "attackRange", 3.0));
+                    if(trace != null && trace.getHitEntity() != null) {
+                        EntityHandler.dealDamage(trace.getHitEntity(), p, Main.entityMap.get(p.getUniqueId()).getDamageDealt());
+                    }
+                }
             }
-            p.setCooldown(p.getInventory().getItemInMainHand().getType(), (int)(20.0/(double)ItemHandler.getAttribute(item, "attackSpeed", 4.0)) );
+            p.setCooldown(p.getInventory().getItemInMainHand().getType(), (int) Math.round(20.0/(double)ItemHandler.getAttribute(item, "attackSpeed", 4.0)));
         }
         ((PlayerInfo) Main.entityMap.get(id)).currentCombo++;
+    }
+    public static RayTraceResult hitRayTrace(LivingEntity ent, double range) {
+        Location loc = ent.getEyeLocation();
+        Predicate<Entity> filter = e -> (!(e instanceof Player) && e instanceof LivingEntity && !e.isDead() && !(e instanceof ArmorStand));
+        return ent.getWorld().rayTrace(loc, loc.getDirection(), range, FluidCollisionMode.NEVER, true, 0.5, filter);
     }
 }

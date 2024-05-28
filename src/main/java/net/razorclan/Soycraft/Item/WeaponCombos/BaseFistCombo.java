@@ -1,17 +1,16 @@
 package net.razorclan.Soycraft.Item.WeaponCombos;
 
 import net.razorclan.Soycraft.Entity.EntityHandler.EntityHandler;
+import net.razorclan.Soycraft.Entity.EntityHandler.PlayerHandler;
 import net.razorclan.Soycraft.Main;
-import org.bukkit.*;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-
-import java.util.function.Predicate;
 
 public class BaseFistCombo {
     public static void onUse(Player p){
@@ -44,14 +43,9 @@ public class BaseFistCombo {
             }.run();//.runTaskLaterAsynchronously(Main.instance, (19 - i) / 4);
         }
 
-        RayTraceResult trace = hitRayTrace(p);
+        RayTraceResult trace = PlayerHandler.hitRayTrace(p, 3.0);
         if(trace != null && trace.getHitEntity() != null) {
             EntityHandler.dealDamage(trace.getHitEntity(), p, Main.entityMap.get(p.getUniqueId()).getDamageDealt());
         }
-    }
-    public static RayTraceResult hitRayTrace(LivingEntity ent) {
-        Location loc = ent.getEyeLocation();
-        Predicate<Entity> filter = e -> (!(e instanceof Player) && e instanceof LivingEntity && !e.isDead() && !(e instanceof ArmorStand));
-        return ent.getWorld().rayTrace(loc, loc.getDirection(), 4.0, FluidCollisionMode.NEVER, true, 0.5, filter);
     }
 }

@@ -19,6 +19,8 @@ public class MobInfo {
     public double healthRegen;
     public double mana;
     public double maxMana;
+    public double stamina;
+    public double maxStamina;
     //Damage Stats
     public double damagePhysical;
     public double damageBlast;
@@ -30,6 +32,10 @@ public class MobInfo {
     public MobInfo() {
         health = 20;
         maxHealth = 20;
+        mana = 20;
+        maxMana = 20;
+        stamina = 20;
+        maxStamina = 20;
         strength = dexterity = vitality = endurance = intelligence = wisdom =
         damagePhysical = damageBlast = damageMagic = damageWither = damageFire = damageWater = 0;
         hologram = null;
@@ -48,6 +54,7 @@ public class MobInfo {
         damagePhysical += 5;
         maxHealth = 20 + Math.sqrt(vitality)*8.0;
         maxMana = 20 + Math.sqrt(wisdom)*8.0;
+        maxStamina = 20 + Math.sqrt(endurance)*4.0;
     }
     public void addAllStatBoostsFromItem(ItemStack item){
         strength += ((Number) ItemHandler.getAttribute(item, "strengthBonus", 0)).doubleValue();

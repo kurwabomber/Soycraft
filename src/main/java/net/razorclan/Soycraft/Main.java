@@ -15,6 +15,7 @@ import net.razorclan.Soycraft.Item.ItemHandler;
 import net.razorclan.Soycraft.Item.MenuItem;
 import net.razorclan.Soycraft.SpellSystem.SpellPlayerHooks;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -74,6 +75,7 @@ public class Main extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new PlayerHandler(), this);
         Bukkit.getPluginManager().registerEvents(new SpellPlayerHooks(), this);
         HUDTimer.run(this);
+        EntityHandler.entityMapGarbageCollection();
         PlayerInfo.regen(this);
 
         this.getCommand("sbgive").setExecutor(new GiveItemExecutor());
@@ -92,6 +94,12 @@ public class Main extends JavaPlugin implements Listener {
                 }
                 PlayerHandler.initializePlayer(player);
             }
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            world.setGameRule(GameRule.DO_INSOMNIA, false);
+            world.setGameRule(GameRule.DISABLE_ELYTRA_MOVEMENT_CHECK, true);
+            world.setGameRule(GameRule.DO_FIRE_TICK, false);
+            world.setGameRule(GameRule.KEEP_INVENTORY, true);
+            world.setGameRule(GameRule.NATURAL_REGENERATION, false);
         }
     }
     @EventHandler
