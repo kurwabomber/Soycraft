@@ -100,6 +100,7 @@ public class Main extends JavaPlugin implements Listener {
             world.setGameRule(GameRule.DO_FIRE_TICK, false);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
             world.setGameRule(GameRule.NATURAL_REGENERATION, false);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         }
     }
     @EventHandler

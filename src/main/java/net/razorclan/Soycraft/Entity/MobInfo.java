@@ -55,6 +55,10 @@ public class MobInfo {
         maxHealth = 20 + Math.sqrt(vitality)*8.0;
         maxMana = 20 + Math.sqrt(wisdom)*8.0;
         maxStamina = 20 + Math.sqrt(endurance)*4.0;
+
+        health = Math.min(health, maxHealth);
+        mana = Math.min(mana, maxMana);
+        stamina = Math.min(stamina, maxStamina);
     }
     public void addAllStatBoostsFromItem(ItemStack item){
         strength += ((Number) ItemHandler.getAttribute(item, "strengthBonus", 0)).doubleValue();

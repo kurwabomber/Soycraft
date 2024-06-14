@@ -67,8 +67,9 @@ public class EntityHandler implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            //dealDamage(e.getEntity(), damager, e.getDamage());
-            e.getEntity().getWorld().spawnParticle(Particle.CRIT, e.getEntity().getLocation(), 15);
+            if (Main.entityMap.containsKey(damager.getUniqueId()))
+                dealDamage(e.getEntity(), damager, Main.entityMap.get(damager.getUniqueId()).getDamageDealt());
+            e.getEntity().getWorld().spawnParticle(Particle.CRIT, e.getEntity().getLocation().add(0.0,1.5,0.0), 9);
             e.setDamage(0);
             ((LivingEntity)e.getEntity()).setNoDamageTicks(0);
         }
@@ -76,7 +77,7 @@ public class EntityHandler implements Listener {
 
     @EventHandler
     public void onEntitySpawn(CreatureSpawnEvent e) {
-        if(e.getEntityType() != EntityType.ARMOR_STAND) {
+        if(e.getEntityType() != EntityType.ARMOR_STAND ) {
             if (!Main.entityMap.containsKey(e.getEntity().getUniqueId()))
                 Main.entityMap.put(e.getEntity().getUniqueId(), new MobInfo());
             addHealthHologram(e.getEntity());

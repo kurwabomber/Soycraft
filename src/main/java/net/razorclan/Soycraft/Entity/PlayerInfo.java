@@ -25,9 +25,10 @@ public class PlayerInfo extends MobInfo {
             public void run() {
                 for (Player p : plugin.getServer().getOnlinePlayers()){
                     UUID id = p.getUniqueId();
-                    Main.entityMap.get(id).health =  Math.min(Main.entityMap.get(id).health + Main.entityMap.get(id).healthRegen, Main.entityMap.get(id).maxHealth);
-                     Main.entityMap.get(id).mana =  Math.min(Main.entityMap.get(id).maxMana/20 +  Main.entityMap.get(id).mana,  Main.entityMap.get(id).maxMana);
-                   }
+                    Main.entityMap.get(id).health = Math.min(Main.entityMap.get(id).health + Main.entityMap.get(id).healthRegen, Main.entityMap.get(id).maxHealth);
+                    Main.entityMap.get(id).mana = Math.min(Main.entityMap.get(id).maxMana/20 + Main.entityMap.get(id).mana,  Main.entityMap.get(id).maxMana);
+                    Main.entityMap.get(id).stamina = Math.min(Main.entityMap.get(id).maxStamina/20 + Main.entityMap.get(id).stamina,  Main.entityMap.get(id).maxStamina);
+                }
             }
         }.runTaskTimerAsynchronously(plugin, 20, 20);
     }

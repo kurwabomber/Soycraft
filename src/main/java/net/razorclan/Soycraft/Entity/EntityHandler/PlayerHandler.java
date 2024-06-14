@@ -33,9 +33,10 @@ public class PlayerHandler implements Listener  {
 
     @EventHandler
     public void onplayerRespawn(PlayerRespawnEvent e) {
+        Player p = e.getPlayer();
         new BukkitRunnable(){public void run() {
-            Main.entityMap.get(e.getPlayer().getUniqueId()).health = Main.entityMap.get(e.getPlayer().getUniqueId()).maxHealth;
-            Main.entityMap.get(e.getPlayer().getUniqueId()).mana = 0;
+            Main.entityMap.put(p.getUniqueId(), new PlayerInfo());
+            ((PlayerInfo)Main.entityMap.get(p.getUniqueId())).updatePlayerStats(p);
         }}.runTaskLater(Main.instance, 1);
     }
 

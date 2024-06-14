@@ -24,7 +24,7 @@ public class HUDTimer {
 
                     hudText.append(IridiumColorAPI.process(String.format("<SOLID:db0049>❤ %.0f/%.0f ", Main.entityMap.get(id).health, Main.entityMap.get(id).maxHealth)));
                     hudText.append(IridiumColorAPI.process(String.format("<SOLID:095fb0>✦ %.0f/%.0f ", Main.entityMap.get(id).mana,Main.entityMap.get(id).maxMana)));
-                    hudText.append(IridiumColorAPI.process(String.format("<SOLID:00cc00>🥾 %.0f/%.0f ", Main.entityMap.get(id).stamina,Main.entityMap.get(id).maxStamina)));
+                    hudText.append(IridiumColorAPI.process(String.format("<SOLID:00cc00>❤ %.0f/%.0f ", Main.entityMap.get(id).stamina,Main.entityMap.get(id).maxStamina)));
 
                     ((PlayerInfo)Main.entityMap.get(id)).extraHudText.removeIf(i -> i.time < System.currentTimeMillis());
 
