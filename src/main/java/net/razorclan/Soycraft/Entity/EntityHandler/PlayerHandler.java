@@ -80,7 +80,7 @@ public class PlayerHandler implements Listener  {
     }
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event){
-        event.setCancelled(false);
+        event.setCancelled(true);
     }
 
     @EventHandler

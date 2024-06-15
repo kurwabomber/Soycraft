@@ -42,31 +42,33 @@ public class BaseItem {
         for(String key : attributes.keySet()){
             if(key.contains("Damage")){
                 description.add(IridiumColorAPI.process("<SOLID:eb8023>Damage Stats:"));
-                addLoreItem("physicalDamage", "<SOLID:EEFFDB>↳ <SOLID:2380eb>⚔ Physical Damage: §6%.0f", description);
-                addLoreItem("blastDamage", "<SOLID:EEFFDB>↳ <SOLID:2380eb>⚠ Blast Damage: §6%.0f", description);
-                addLoreItem("magicDamage", "<SOLID:EEFFDB>↳ <SOLID:2380eb>✦ Magic Damage: §6%.0f", description);
-                addLoreItem("witherDamage", "<SOLID:EEFFDB>↳ <SOLID:2380eb>\uD83C\uDFF5 Wither Damage: §6%.0f", description);
-                addLoreItem("fireDamage", "<SOLID:EEFFDB>↳ <SOLID:2380eb>\uD83D\uDD25 Fire Damage: §6%.0f", description);
-                addLoreItem("waterDamage", "<SOLID:EEFFDB>↳ <SOLID:2380eb>\uD83C\uDF0A Water Damage: §6%.0f", description);
+                addLoreItem("physicalDamage", "<SOLID:ffd966>↳ <SOLID:2380eb>⚔ Physical Damage: §6%.0f", description);
+                addLoreItem("blastDamage", "<SOLID:ffd966>↳ <SOLID:2380eb>⚠ Blast Damage: §6%.0f", description);
+                addLoreItem("magicDamage", "<SOLID:ffd966>↳ <SOLID:2380eb>✦ Magic Damage: §6%.0f", description);
+                addLoreItem("witherDamage", "<SOLID:ffd966>↳ <SOLID:2380eb>\uD83C\uDFF5 Wither Damage: §6%.0f", description);
+                addLoreItem("fireDamage", "<SOLID:ffd966>↳ <SOLID:2380eb>\uD83D\uDD25 Fire Damage: §6%.0f", description);
+                addLoreItem("waterDamage", "<SOLID:ffd966>↳ <SOLID:2380eb>\uD83C\uDF0A Water Damage: §6%.0f", description);
+                addLoreItem("attackSpeed", "<SOLID:ffd966>↳ <SOLID:2380eb>⚔ Attack Speed: §6%.1f attacks/s", description);
+                addLoreItem("attackRange", "<SOLID:ffd966>↳ <SOLID:2380eb>⚔ Attack Range: §6%.1f blocks", description);
+                description.add("");
                 break;
             }
         }
         for(String key : attributes.keySet()){
             if(key.contains("Bonus")){
                 description.add(IridiumColorAPI.process("<SOLID:eb8023>Stat Modifiers:"));
-                addLoreItem("strengthBonus", "<SOLID:EEFFDB>↳ <SOLID:2380eb>\uD83D\uDCAA Strength: §6%.0f", description);
-                addLoreItem("dexterityBonus", "<SOLID:EEFFDB>↳ <SOLID:2380eb>⑊ Dexterity: §6%.0f", description);
-                addLoreItem("vitalityBonus", "<SOLID:EEFFDB>↳ <SOLID:2380eb>❤ Vitality: §6%.0f", description);
-                addLoreItem("enduranceBonus", "<SOLID:EEFFDB>↳ <SOLID:2380eb>\uD83D\uDEE1 Endurance: §6%.0f", description);
-                addLoreItem("intelligenceBonus", "<SOLID:EEFFDB>↳ <SOLID:2380eb>✦ Intelligence: §6%.0f", description);
-                addLoreItem("wisdomBonus", "<SOLID:EEFFDB>↳ <SOLID:2380eb>✦ Wisdom: §6%.0f", description);
+                addLoreItem("strengthBonus", "<SOLID:ffd966>↳ <SOLID:2380eb>\uD83D\uDCAA Strength: §6%.0f", description);
+                addLoreItem("dexterityBonus", "<SOLID:ffd966>↳ <SOLID:2380eb>⑊ Dexterity: §6%.0f", description);
+                addLoreItem("vitalityBonus", "<SOLID:ffd966>↳ <SOLID:2380eb>❤ Vitality: §6%.0f", description);
+                addLoreItem("enduranceBonus", "<SOLID:ffd966>↳ <SOLID:2380eb>\uD83D\uDEE1 Endurance: §6%.0f", description);
+                addLoreItem("intelligenceBonus", "<SOLID:ffd966>↳ <SOLID:2380eb>✦ Intelligence: §6%.0f", description);
+                addLoreItem("wisdomBonus", "<SOLID:ffd966>↳ <SOLID:2380eb>✦ Wisdom: §6%.0f", description);
+                description.add("");
                 break;
             }
         }
-        addLoreItem("attackSpeed", "<SOLID:2380eb>⚔ Attack Speed: §6%.1f attacks/s", description);
-        addLoreItem("attackRange", "<SOLID:2380eb>⚔ Attack Range: §6%.1f blocks", description);
         addLoreItem("enchantability", "<SOLID:2380eb>✦ Enchantability: §6%.0f", description);
-
+        description.add("");
         description.add(IridiumColorAPI.process(itemLore));
         return description;
     }
